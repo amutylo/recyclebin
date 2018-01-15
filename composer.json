@@ -1,7 +1,7 @@
 {
   "name": "drupal/recyclebin",
   "type": "drupal-module",
-  "description": "Drupal Recycle module which implements a custom workflow via the state machine API",
+  "description": "Drupal RecycleBin module which implements a custom workflow via the state machine API",
   "keywords": ["Drupal"],
   "license": "GPL-2.0+",
   "homepage": "https://www.drupal.org/project/recyclebin",

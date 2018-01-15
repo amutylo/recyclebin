@@ -1,6 +1,6 @@
 name: Recycle Bin
 type: module
-description: Provide Recycle Bin functionality via state machine API
+description: Provide Recycle Bin functionality via state machine API.
 core: 8.x
 package: Custom
 dependencies:

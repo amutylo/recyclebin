@@ -1,1 +1,1 @@
-Drupal Recycle module which implements a custom workflow via the state machine API.
+Drupal RecycleBin module which implements a custom workflow via the state machine API.
