@@ -1,2 +1,2 @@
-permission_callbacks:
-  - \Drupal\recyclebin\RecyclebinPermissions::permissions
+#permission_callbacks:
+#  - \Drupal\recyclebin\RecyclebinPermissions::permissions
