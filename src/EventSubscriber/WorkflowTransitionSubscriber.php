@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\recyclebin\WorkflowTransitionSubscriber;
+namespace Drupal\recyclebin\EventSubscriber;
 
 use Drupal\recyclebin\WorkflowHelperInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;

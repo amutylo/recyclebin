@@ -2,11 +2,11 @@ services:
   recyclebin.workflow.helper:
     class: Drupal\recyclebin\WorkflowHelper
     arguments: ['@current_user']
-#  recyclebin.workflow_transition:
-#      class: 'Drupal\recyclebin\EventSubscriber\WorkflowTransitionSubscriber'
-#      arguments: ['@recyclebin.workflow.helper']
-#      tags:
-#        - { name: event_subscriber }
+  recyclebin.workflow_transition:
+      class: 'Drupal\recyclebin\EventSubscriber\WorkflowTransitionSubscriber'
+      arguments: ['@recyclebin.workflow.helper']
+      tags:
+        - { name: event_subscriber }
 #  recyclebin.recycle_guard:
 #    class: Drupal\recyclebin\Guard\RecycleGuard
 #    arguments: ['@current_user', '@plugin.manager.workflow']
