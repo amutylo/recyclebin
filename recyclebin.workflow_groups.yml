@@ -1,0 +1,3 @@
+recycle:
+  label: Recycle bin
+  entity_type: node

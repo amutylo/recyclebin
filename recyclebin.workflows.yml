@@ -1,0 +1,18 @@
+recycle_default:
+  id: recycle_default
+  label: Default Recycle
+  group: recycle
+  states:
+    normal:
+      label: Normal
+    recycled:
+      label: Recycled
+  transitions:
+    recycled:
+      label: Recycled
+      from: [normal]
+      to: recycled
+    unrecycle:
+      label: Unrecycle
+      from: [recycled]
+      to: normal

@@ -1,0 +1,24 @@
+<?php
+
+/**
+ * @file
+ * Contains recyclebin.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function recyclebin_help($route_name, RouteMatchInterface $route_match) {
+    switch ($route_name) {
+        // Main module help for the recyclebin module.
+        case 'help.page.recyclebin':
+            $output = '';
+            $output .= '<h3>' . t('About') . '</h3>';
+            $output .= '<p>' . t('Provide Recycle Bin functionality via state machine API.') . '</p>';
+            return $output;
+
+        default:
+    }
+}
