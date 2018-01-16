@@ -12,6 +12,7 @@ use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\state_machine\WorkflowManagerInterface;
 use Drupal\state_machine\Plugin\Workflow\WorkflowTransition;
 use Drupal\state_machine\Plugin\Workflow\WorkflowInterface;
+use Drupal\Core\Entity\EntityInterface;
 
 
 class RecycleGuard implements GuardInterface {
@@ -49,7 +50,7 @@ class RecycleGuard implements GuardInterface {
    * {@inheritdoc}
    */
   public function allowed(WorkflowTransition $transition, WorkflowInterface $workflow, EntityInterface $entity) {
-    // Don't allow transition for users without permissions.
+    // Users without permissions won't be allowed to act.
     $transition_id = $transition->getId();
     $workflow_id = $workflow->getId();
     if (!$this->currentUser->hasPermission('use ' . $transition_id . ' transition in ' . $workflow_id)) {
