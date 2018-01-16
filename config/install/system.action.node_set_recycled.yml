@@ -1,0 +1,10 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: node_set_recycled
+label: 'Push node to recycle bin'
+type: node
+plugin: node_set_recycled
+configuration: {  }

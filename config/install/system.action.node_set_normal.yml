@@ -1,0 +1,10 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: node_set_normal
+label: 'Push node back to normal'
+type: node
+plugin: node_set_normal
+configuration: {  }
