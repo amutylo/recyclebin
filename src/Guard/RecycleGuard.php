@@ -50,6 +50,7 @@ class RecycleGuard implements GuardInterface {
    * {@inheritdoc}
    */
   public function allowed(WorkflowTransition $transition, WorkflowInterface $workflow, EntityInterface $entity) {
+      
     // Users without permissions won't be allowed to act.
     $transition_id = $transition->getId();
     $workflow_id = $workflow->getId();

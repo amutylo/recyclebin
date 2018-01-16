@@ -1,4 +1,4 @@
-uuid: 3312ead9-648f-462e-8126-7f15b16ca0a4
+uuid: e5445904-e500-4300-805b-ae01591e04b1
 langcode: en
 status: true
 dependencies:
@@ -11,7 +11,7 @@ id: node.page.field_recycle
 field_name: field_recycle
 entity_type: node
 bundle: page
-label: Recycle
+label: recycle
 description: ''
 required: false
 translatable: true

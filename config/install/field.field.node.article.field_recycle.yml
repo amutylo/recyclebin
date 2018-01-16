@@ -1,4 +1,4 @@
-uuid: aa60fca3-5fac-41e4-a102-475dd7cac4fc
+uuid: c1c163ed-447f-4995-8f70-1f3856a5bcd0
 langcode: en
 status: true
 dependencies:
@@ -11,11 +11,13 @@ id: node.article.field_recycle
 field_name: field_recycle
 entity_type: node
 bundle: article
-label: Recycle
+label: recycle
 description: ''
-required: true
+required: false
 translatable: false
-default_value: {  }
+default_value:
+  -
+    value: normal
 default_value_callback: ''
 settings:
   workflow: recycle_default

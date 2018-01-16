@@ -8,6 +8,9 @@
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Implements hook_help().
@@ -26,22 +29,85 @@ function recyclebin_help($route_name, RouteMatchInterface $route_match) {
 }
 
 /**
- * Implements hook_entity_operation_alter().
- */
-function recyclebin_entity_operation_alter(array &$operations, EntityInterface $entity) {
-    if (!(\Drupal::currentUser()->hasPermission('access content'))) {
-        return;
-    }
-    //delete node only via recycle bin;
-    unset($operations['delete']);
-}
-
-/**
- * Implements hook_entity_view_alter().
+ * Implement hook_entity_view_alter
+ * Prevent access to entity in recycle bin
+ * @param array $build
+ * @param EntityInterface $entity
+ * @param EntityViewDisplayInterface $display
+ * @return bool|void
  */
 function recyclebin_entity_view_alter(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display) {
     if (!(\Drupal::currentUser()->hasPermission('access content'))) {
-        return;
+      return;
     }
-    //TODO:: add alter code;
+    if ($entity->hasField('field_recycle')){
+        $recycled = $entity->field_recycle->value;
+        switch($recycled) {
+            case 'recycled':
+                return;
+            default:
+                $recycledTransition = \Drupal::currentUser()->hasPermission('use recycled transition in recycle_default');
+                if ($recycledTransition) {
+                    return TRUE;
+                }
+        }
+    }
+}
+
+/**
+ * @param EntityInterface $entity
+ * @param $operation
+ * @param AccountInterface $account
+ * @return \Drupal\Core\Access\AccessResultAllowed|\Drupal\Core\Access\AccessResultForbidden
+ */
+function recyclebin_node_access(EntityInterface $entity, $operation, AccountInterface $account) {
+    if ($operation == 'delete') {
+        $routeName = \Drupal::routeMatch()->getRouteName();
+        if ($routeName == 'view.recycle_bin.page_recycle_bin') {
+            return AccessResult::allowed();
+        }
+        elseif($entity->hasField('field_recycle') && ($entity->field_recycle->value == 'recycled')) {
+            return AccessResult::allowed();
+        }
+        else {
+            return AccessResult::forbidden();
+        }
+    }
+    elseif ($operation == 'view') {
+        $recycledTransition = $account->hasPermission('use recycled transition in recycle_default');
+        if ($recycledTransition) {
+            return AccessResult::allowed();
+        }
+    }
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function recyclebin_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+    switch ($form_id) {
+        case "node_page_delete_form":
+        case "node_article_delete_form":
+            $form['#validate'][] = '_recyclebin_node_delete_validation';
+            break;
+        default:
+    }
+
+}
+
+/**
+ * 
+ * @param $form
+ * @param FormStateInterface $form_state
+ */
+function _recyclebin_node_delete_validation(&$form, FormStateInterface $form_state){
+    $entity = $form_state->getFormObject()->getEntity();
+    if($entity->hasField('field_recycle') && ($entity->field_recycle->value == 'normal')) {
+        $form_state->setError($form, 'Node delete prevented, node placed to Recycle Bin' );
+        unset($form['#submit']);
+        unset($form['actions']['submit']);
+        $entity->set('field_recycle', 'recycled');
+        $entity->setUnpublished();
+        $entity->save();
+    }
 }
