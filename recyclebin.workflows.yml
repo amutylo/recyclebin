@@ -11,10 +11,10 @@ recycle_default:
       published: false
   transitions:
     recycled:
-      label: Recycled
+      label: 'to Recycled'
       from: [normal]
       to: recycled
     unrecycle:
-      label: Unrecycle
+      label: 'to Normal'
       from: [recycled]
       to: normal

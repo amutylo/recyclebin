@@ -38,6 +38,7 @@ class WorkflowTransitionSubscriber implements EventSubscriberInterface {
     //use generic event name;
     return [
       'recycle.recycled.pre_transition' => 'handleAction',
+      'recycle.unrecycle.pre_transition' => 'handleAction'
     ];
   }
 
@@ -48,9 +49,10 @@ class WorkflowTransitionSubscriber implements EventSubscriberInterface {
      */
     public function handleAction(WorkflowTransitionEvent $event) {
         $entity = $event->getEntity();
-
+        $toState = $event->getToState();
+        $eventWorkflow = $event->getWorkflow();
         // Check the new state is the published one.
-        $is_published_state = $this->isPublishedState($event->getToState(), $event->getWorkflow());
+        $is_published_state = $this->isPublishedState($toState, $eventWorkflow);
 
         $fields = $this->workflowHelper->getEntityStateField($entity);
 
