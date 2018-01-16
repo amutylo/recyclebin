@@ -74,10 +74,13 @@ function recyclebin_node_access(EntityInterface $entity, $operation, AccountInte
         }
     }
     elseif ($operation == 'view') {
-        $recycledTransition = $account->hasPermission('use recycled transition in recycle_default');
-        if ($recycledTransition) {
-            return AccessResult::allowed();
-        }
+//        $recycledTransition = $account->hasPermission('use recycled transition in recycle_default');
+//        if ($recycledTransition) {
+//            return AccessResult::allowed();
+//        }
+      if($entity->hasField('field_recycle') && ($entity->field_recycle->value == 'recycled')) {
+        return AccessResult::forbidden();
+      }
     }
 }
 
