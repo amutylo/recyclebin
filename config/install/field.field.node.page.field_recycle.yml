@@ -1,19 +1,19 @@
-uuid: 238a587c-1bac-4d8a-aa41-a9e93468a4d1
+uuid: 3312ead9-648f-462e-8126-7f15b16ca0a4
 langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.node.field_recyclebin_status
+    - field.storage.node.field_recycle
     - node.type.page
   module:
     - state_machine
-id: node.page.field_recyclebin_status
-field_name: field_recyclebin_status
+id: node.page.field_recycle
+field_name: field_recycle
 entity_type: node
 bundle: page
-label: 'Recyclebin status'
+label: Recycle
 description: ''
-required: true
+required: false
 translatable: true
 default_value: {  }
 default_value_callback: ''

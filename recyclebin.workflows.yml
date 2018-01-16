@@ -5,8 +5,10 @@ recycle_default:
   states:
     normal:
       label: Normal
+      published: true
     recycled:
       label: Recycled
+      published: false
   transitions:
     recycled:
       label: Recycled
