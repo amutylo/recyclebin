@@ -1,6 +1,2 @@
-access entity recycle bin:
-  title: 'Access to entity in Recycle Bin'
-  description: 'Access to entity in Recycle Bin'
-  restrict access: TRUE
 permission_callbacks:
   - \Drupal\recyclebin\RecyclePermissions::permissions

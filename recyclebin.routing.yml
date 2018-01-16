@@ -1,0 +1,6 @@
+recyclebin.purge:
+  path: '/purge-recyclebin'
+  defaults:
+    _controller: '\Drupal\recyclebin\Controller\RecyclebinController::purge'
+  requirements:
+    _permission: 'access content'

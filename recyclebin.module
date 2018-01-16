@@ -88,26 +88,28 @@ function recyclebin_form_alter(&$form, FormStateInterface $form_state, $form_id)
     switch ($form_id) {
         case "node_page_delete_form":
         case "node_article_delete_form":
-            $form['#validate'][] = '_recyclebin_node_delete_validation';
-            break;
+        $node = \Drupal::routeMatch()->getParameter('node');
+        if($node->hasField('field_recycle') && ($node->field_recycle->value == 'normal')) {
+          $form['#validate'][] = '_recyclebin_node_delete_validation';
+        }
+          break;
         default:
     }
-
 }
 
 /**
- * 
+ * Node delete validate callback.
  * @param $form
  * @param FormStateInterface $form_state
  */
 function _recyclebin_node_delete_validation(&$form, FormStateInterface $form_state){
     $entity = $form_state->getFormObject()->getEntity();
     if($entity->hasField('field_recycle') && ($entity->field_recycle->value == 'normal')) {
-        $form_state->setError($form, 'Node delete prevented, node placed to Recycle Bin' );
+        $form_state->setError($form, 'Node delete prevented, node is placed to Recycle Bin. Click cancel.' );
         unset($form['#submit']);
         unset($form['actions']['submit']);
+        $form['actions']['cancel']['#title'] = t('Back to previous page');
         $entity->set('field_recycle', 'recycled');
-        $entity->setUnpublished();
         $entity->save();
     }
 }
