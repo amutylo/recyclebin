@@ -345,14 +345,14 @@ display:
           plugin_id: field
           entity_type: node
           entity_field: changed
-        operations:
-          id: operations
+        edit_node:
+          id: edit_node
           table: node
-          field: operations
+          field: edit_node
           relationship: none
           group_type: group
           admin_label: ''
-          label: Operations
+          label: Edit
           exclude: false
           alter:
             alter_text: false
@@ -393,8 +393,9 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-          destination: true
-          plugin_id: entity_operations
+          text: Edit
+          entity_type: node
+          plugin_id: entity_link_edit
       filters:
         title:
           id: title
