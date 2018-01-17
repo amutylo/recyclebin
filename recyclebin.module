@@ -86,7 +86,7 @@ function _recyclebin_node_delete_validation(&$form, FormStateInterface $form_sta
         $entity->save();
     }
     elseif ($entity->hasField('field_recycle') && ($entity->field_recycle->value == 'recycled')) {
-        $form_state->setError($form, 'Node can be deleted from Recycle Bin page ' );
+        $form_state->setError($form, 'Node can be deleted from Recycle Bin page.' );
         unset($form['#submit']);
         unset($form['actions']['submit']);
         $form['actions']['cancel']['#url'] = Url::fromUserInput('/recycle-bin');
