@@ -16,16 +16,15 @@ use Drupal\Core\Url;
  * Implements hook_help().
  */
 function recyclebin_help($route_name, RouteMatchInterface $route_match) {
-    switch ($route_name) {
-        // Main module help for the recyclebin module.
-        case 'help.page.recyclebin':
-            $output = '';
-            $output .= '<h3>' . t('About') . '</h3>';
-            $output .= '<p>' . t('Provide Recycle Bin functionality via state machine API.') . '</p>';
-            return $output;
-
-        default:
-    }
+  switch ($route_name) {
+  // Main module help for the recyclebin module.
+    case 'help.page.recyclebin':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Provide Recycle Bin functionality via state machine API.') . '</p>';
+      return $output;
+    default:
+  }
 }
 
 /**
@@ -35,39 +34,35 @@ function recyclebin_help($route_name, RouteMatchInterface $route_match) {
  * @return \Drupal\Core\Access\AccessResultAllowed|\Drupal\Core\Access\AccessResultForbidden
  */
 function recyclebin_node_access(EntityInterface $entity, $operation, AccountInterface $account) {
-    if ($operation == 'delete') {
-        $routeName = \Drupal::routeMatch()->getRouteName();
-        if ($routeName == 'view.recycle_bin.page_recycle_bin') {
-            return AccessResult::allowed();
-        }
-        elseif($entity->hasField('field_recycle') && ($entity->field_recycle->value == 'recycled')) {
-            return AccessResult::allowed();
-        }
-        else {
-            return AccessResult::forbidden();
-        }
+  if ($operation == 'delete') {
+    $routeName = \Drupal::routeMatch()->getRouteName();
+    if ($routeName == 'view.recycle_bin.page_recycle_bin') {
+      return AccessResult::allowed();
     }
-    elseif ($operation == 'view') {
-      if ($entity->hasField('field_recycle') && ($entity->field_recycle->value == 'recycled')) {
-        return AccessResult::forbidden();
+    elseif($entity->hasField('field_recycle') && ($entity->field_recycle->value == 'recycled')) {
+      return AccessResult::allowed();
+    }
+    else {
+      return AccessResult::forbidden();
       }
+  }
+  elseif ($operation == 'view') {
+    if ($entity->hasField('field_recycle') && ($entity->field_recycle->value == 'recycled')) {
+      return AccessResult::forbidden();
     }
+  }
 }
 
 /**
  * Implements hook_form_alter().
  */
 function recyclebin_form_alter(&$form, FormStateInterface $form_state, $form_id) {
-    switch ($form_id) {
-        case "node_page_delete_form":
-        case "node_article_delete_form":
-        $node = \Drupal::routeMatch()->getParameter('node');
-        if ($node->hasField('field_recycle') && !empty($node->field_recycle->value)) {
-          $form['#validate'][] = '_recyclebin_node_delete_validation';
-        }
-          break;
-        default:
+  if (strpos($form_id, 'delete') && method_exists($form_state->getFormObject(), 'getEntity')) {
+    $node = \Drupal::routeMatch()->getParameter('node');
+    if ($node->hasField('field_recycle') && !empty($node->field_recycle->value)) {
+      $form['#validate'][] = '_recyclebin_node_delete_validation';
     }
+  }
 }
 
 /**
@@ -76,20 +71,20 @@ function recyclebin_form_alter(&$form, FormStateInterface $form_state, $form_id)
  * @param FormStateInterface $form_state
  */
 function _recyclebin_node_delete_validation(&$form, FormStateInterface $form_state){
-    $entity = $form_state->getFormObject()->getEntity();
-    if ($entity->hasField('field_recycle') && ($entity->field_recycle->value == 'normal')) {
-        $form_state->setError($form, 'Node delete prevented, node is placed to Recycle Bin. Click back to node page' );
-        unset($form['#submit']);
-        unset($form['actions']['submit']);
-        $form['actions']['cancel']['#title'] = t('Back to node page');
-        $entity->set('field_recycle', 'recycled');
-        $entity->save();
-    }
-    elseif ($entity->hasField('field_recycle') && ($entity->field_recycle->value == 'recycled')) {
-        $form_state->setError($form, 'Node can be deleted from Recycle Bin page.' );
-        unset($form['#submit']);
-        unset($form['actions']['submit']);
-        $form['actions']['cancel']['#url'] = Url::fromUserInput('/recycle-bin');
-        $form['actions']['cancel']['#title'] = t('Go to Recycle Bin');
-    }
+  $entity = $form_state->getFormObject()->getEntity();
+  if ($entity->hasField('field_recycle') && ($entity->field_recycle->value == 'normal')) {
+    $form_state->setError($form, 'Node delete prevented, node is placed to Recycle Bin. Click back to node page' );
+    unset($form['#submit']);
+    unset($form['actions']['submit']);
+    $form['actions']['cancel']['#title'] = t('Back to node page');
+    $entity->set('field_recycle', 'recycled');
+    $entity->save();
+  }
+  elseif ($entity->hasField('field_recycle') && ($entity->field_recycle->value == 'recycled')) {
+    $form_state->setError($form, 'Node can be deleted from Recycle Bin page.' );
+    unset($form['#submit']);
+    unset($form['actions']['submit']);
+    $form['actions']['cancel']['#url'] = Url::fromUserInput('/recycle-bin');
+    $form['actions']['cancel']['#title'] = t('Go to Recycle Bin');
+  }
 }
