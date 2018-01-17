@@ -10,6 +10,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 
 /**
  * Implements hook_help().
@@ -61,7 +62,7 @@ function recyclebin_form_alter(&$form, FormStateInterface $form_state, $form_id)
         case "node_page_delete_form":
         case "node_article_delete_form":
         $node = \Drupal::routeMatch()->getParameter('node');
-        if($node->hasField('field_recycle') && ($node->field_recycle->value == 'normal')) {
+        if($node->hasField('field_recycle') && !empty($node->field_recycle->value)) {
           $form['#validate'][] = '_recyclebin_node_delete_validation';
         }
           break;
@@ -77,11 +78,18 @@ function recyclebin_form_alter(&$form, FormStateInterface $form_state, $form_id)
 function _recyclebin_node_delete_validation(&$form, FormStateInterface $form_state){
     $entity = $form_state->getFormObject()->getEntity();
     if($entity->hasField('field_recycle') && ($entity->field_recycle->value == 'normal')) {
-        $form_state->setError($form, 'Node delete prevented, node is placed to Recycle Bin. Click cancel.' );
+        $form_state->setError($form, 'Node delete prevented, node is placed to Recycle Bin. Click back to node page' );
         unset($form['#submit']);
         unset($form['actions']['submit']);
-        $form['actions']['cancel']['#title'] = t('Back to previous page');
+        $form['actions']['cancel']['#title'] = t('Back to node page');
         $entity->set('field_recycle', 'recycled');
         $entity->save();
+    }
+    elseif ($entity->hasField('field_recycle') && ($entity->field_recycle->value == 'recycled')) {
+        $form_state->setError($form, 'Node can be deleted from Recycle Bin page ' );
+        unset($form['#submit']);
+        unset($form['actions']['submit']);
+        $form['actions']['cancel']['#url'] = Url::fromUserInput('/recycle-bin');
+        $form['actions']['cancel']['#title'] = t('Go to Recycle Bin');
     }
 }
