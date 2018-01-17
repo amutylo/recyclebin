@@ -8,7 +8,6 @@ use Drupal\core\Entity\EntityTypeManagerInterface;
 use Drupal\state_machine\WorkflowManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-
 class RecyclePermissions implements ContainerInjectionInterface {
 
   use StringTranslationTrait;

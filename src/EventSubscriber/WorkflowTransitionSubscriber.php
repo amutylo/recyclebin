@@ -48,22 +48,19 @@ class WorkflowTransitionSubscriber implements EventSubscriberInterface {
      * @throws \Exception
      */
     public function handleAction(WorkflowTransitionEvent $event) {
-        $entity = $event->getEntity();
-        $toState = $event->getToState();
-        $eventWorkflow = $event->getWorkflow();
-        // Check the new state is the published one.
-        $is_published_state = $this->isPublishedState($toState, $eventWorkflow);
-
-        $fields = $this->workflowHelper->getEntityStateField($entity);
-
+      $entity = $event->getEntity();
+      $toState = $event->getToState();
+      $eventWorkflow = $event->getWorkflow();
+      // Check the new state is the published one.
+      $is_published_state = $this->isPublishedState($toState, $eventWorkflow);
+      $fields = $this->workflowHelper->getEntityStateField($entity);
         if ($entity instanceof EntityPublishedInterface) {
-            if ($is_published_state) {
-                $entity->setPublished();
-            }
-            else {
-                $entity->setUnpublished();
-            }
-
+          if ($is_published_state) {
+              $entity->setPublished();
+          }
+          else {
+            $entity->setUnpublished();
+          }
         }
     }
 

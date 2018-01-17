@@ -4,7 +4,6 @@ namespace Drupal\recyclebin\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Url;
-use Drupal\node\Entity\Node;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class RecyclebinController extends ControllerBase {
@@ -19,9 +18,7 @@ class RecyclebinController extends ControllerBase {
     $storage_handler = \Drupal::entityTypeManager()->getStorage("node");
     $entities = $storage_handler->loadMultiple($nids);
     $storage_handler->delete($entities);
-
     drupal_set_message('Recycle Bin was purged.');
-
     return new RedirectResponse(Url::fromUserInput('/recycle-bin')->toString());
   }
 }

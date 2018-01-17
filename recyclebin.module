@@ -7,7 +7,6 @@
 
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Form\FormStateInterface;
@@ -25,32 +24,6 @@ function recyclebin_help($route_name, RouteMatchInterface $route_match) {
             return $output;
 
         default:
-    }
-}
-
-/**
- * Implement hook_entity_view_alter
- * Prevent access to entity in recycle bin
- * @param array $build
- * @param EntityInterface $entity
- * @param EntityViewDisplayInterface $display
- * @return bool|void
- */
-function recyclebin_entity_view_alter(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display) {
-    if (!(\Drupal::currentUser()->hasPermission('access content'))) {
-      return;
-    }
-    if ($entity->hasField('field_recycle')){
-        $recycled = $entity->field_recycle->value;
-        switch($recycled) {
-            case 'recycled':
-                return;
-            default:
-                $recycledTransition = \Drupal::currentUser()->hasPermission('use recycled transition in recycle_default');
-                if ($recycledTransition) {
-                    return TRUE;
-                }
-        }
     }
 }
 
@@ -74,10 +47,6 @@ function recyclebin_node_access(EntityInterface $entity, $operation, AccountInte
         }
     }
     elseif ($operation == 'view') {
-//        $recycledTransition = $account->hasPermission('use recycled transition in recycle_default');
-//        if ($recycledTransition) {
-//            return AccessResult::allowed();
-//        }
       if($entity->hasField('field_recycle') && ($entity->field_recycle->value == 'recycled')) {
         return AccessResult::forbidden();
       }
